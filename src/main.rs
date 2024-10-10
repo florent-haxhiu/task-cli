@@ -5,14 +5,15 @@ use std::{fs, str::FromStr};
 use serde::{Deserialize, Serialize};
 use serde_json::from_reader;
 
-//use clap::Parser;
+use clap::Parser;
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Parser, Serialize, Deserialize, Debug, Clone)]
+#[command(version, about, long_about = None)]
 struct Task {
-    //#[arg(short, long)]
+    #[arg(short, long)]
     name: String,
 
-    //#[arg(short, long, default_value_t = false)]
+    #[arg(short, long, default_value_t = false)]
     done: bool,
 }
 
@@ -33,19 +34,17 @@ fn main() {
     let buffer: serde_json::Value = from_reader(file).expect("File should be proper JSON");
     let mut tasks: Tasks = serde_json::from_str(&buffer.to_string()).unwrap();
 
-    println!("{:#?}", tasks);
+    let args = Task::parse();
 
-    let name = String::from_str("Florent").unwrap();
-    let task = Task { name, done: false };
+    tasks.add_task(&args);
 
-    tasks.add_task(&task);
-
-    let _serialized = serde_json::to_string(&task).unwrap();
+    let serialized = serde_json::to_string(&tasks).unwrap();
 
     println!("{:#?}", tasks);
-    println!("{}", buffer);
+    let _ = write_to_file("src/data.json", serialized);
+}
 
-    //let args = Task::parse();
-
-    //println!("Hello {}", args.name);
+fn write_to_file(data_path: &str, data: String) -> Result<(), Box<dyn std::error::Error>> {
+    fs::write(data_path, &data)?;
+    Ok(())
 }
