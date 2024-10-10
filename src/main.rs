@@ -22,8 +22,9 @@ struct Tasks {
 }
 
 impl Tasks {
-    fn add_task(mut &self, task: &Task) {
-        self.data.push(task.clone());
+    fn add_task(&mut self, task: &Task) {
+        let vec = &mut self.data;
+        vec.push(task.clone());
     }
 }
 
