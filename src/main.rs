@@ -1,15 +1,14 @@
 // Task CLI
 
-use std::{fs, str::FromStr};
-
+use rusqlite::{params, Connection, Result};
 use serde::{Deserialize, Serialize};
-use serde_json::from_reader;
 
 use clap::Parser;
 
-#[derive(Parser, Serialize, Deserialize, Debug, Clone)]
-#[command(version, about, long_about = None)]
+#[derive(Parser, Debug, Clone)]
+//#[command(version, about, long_about = None)]
 struct Task {
+    id: i32,
     #[arg(short, long)]
     name: String,
 
@@ -17,34 +16,51 @@ struct Task {
     done: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-struct Tasks {
-    data: Vec<Task>,
-}
+//#[derive(Debug, Clone)]
+//struct Tasks {
+//    data: Vec<Task>,
+//}
 
-impl Tasks {
-    fn add_task(&mut self, task: &Task) {
-        let vec = &mut self.data;
-        vec.push(task.clone());
-    }
-}
+//impl Tasks {
+//    fn add_task(&mut self, task: &Task) {
+//        let vec = &mut self.data;
+//        vec.push(task.clone());
+//    }
+//}
 
-fn main() {
-    let file = fs::File::open("src/data.json").expect("file should be open");
-    let buffer: serde_json::Value = from_reader(file).expect("File should be proper JSON");
-    let mut tasks: Tasks = serde_json::from_str(&buffer.to_string()).unwrap();
+fn main() -> Result<(), rusqlite::Error> {
+    let conn = Connection::open_in_memory()?;
+
+    conn.execute(
+        "CREATE TABLE task (   
+            id   INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            done TEXT
+        )",
+        (),
+    )?;
 
     let args = Task::parse();
 
-    tasks.add_task(&args);
+    let is_done = if args.done == false { 'N' } else { 'Y' };
 
-    let serialized = serde_json::to_string(&tasks).unwrap();
+    conn.execute(
+        "INSERT INTO task (id, name, done) VALUES (?1, ?2, ?3)",
+        (&args.id, &args.name, &is_done.to_string()),
+    )?;
 
-    println!("{:#?}", tasks);
-    let _ = write_to_file("src/data.json", serialized);
-}
+    let mut stmt = conn.prepare("SELECT id, name, done FROM task")?;
 
-fn write_to_file(data_path: &str, data: String) -> Result<(), Box<dyn std::error::Error>> {
-    fs::write(data_path, &data)?;
+    let task_iter = stmt.query_map([], |row| {
+        Ok(Task {
+            id: row.get(0)?,
+            name: row.get(1)?,
+            done: row.get(2)?,
+        })
+    })?;
+
+    for t in task_iter {
+        println!("Found task {:#?}", t.unwrap());
+    }
     Ok(())
 }
