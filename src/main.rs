@@ -1,52 +1,34 @@
 // Task CLI
-
-use rusqlite::{params, Connection, Result};
-use serde::{Deserialize, Serialize};
+use rusqlite::{Connection, Result};
 
 use clap::Parser;
 
+use crate::table::table::create_table;
+
+mod table;
+
 #[derive(Parser, Debug, Clone)]
-//#[command(version, about, long_about = None)]
+#[command(version, about, long_about = None)]
 struct Task {
+    #[arg(short, long, default_value_t = 1)]
     id: i32,
     #[arg(short, long)]
     name: String,
-
     #[arg(short, long, default_value_t = false)]
     done: bool,
 }
 
-//#[derive(Debug, Clone)]
-//struct Tasks {
-//    data: Vec<Task>,
-//}
-
-//impl Tasks {
-//    fn add_task(&mut self, task: &Task) {
-//        let vec = &mut self.data;
-//        vec.push(task.clone());
-//    }
-//}
-
-fn main() -> Result<(), rusqlite::Error> {
+fn main() -> Result<()> {
     let conn = Connection::open_in_memory()?;
 
-    conn.execute(
-        "CREATE TABLE task (   
-            id   INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            done TEXT
-        )",
-        (),
-    )?;
+    let _ = create_table(&conn);
 
     let args = Task::parse();
-
-    let is_done = if args.done == false { 'N' } else { 'Y' };
+    println!("{:#?}", args);
 
     conn.execute(
         "INSERT INTO task (id, name, done) VALUES (?1, ?2, ?3)",
-        (&args.id, &args.name, &is_done.to_string()),
+        (&args.id, &args.name, &args.done),
     )?;
 
     let mut stmt = conn.prepare("SELECT id, name, done FROM task")?;
@@ -60,7 +42,7 @@ fn main() -> Result<(), rusqlite::Error> {
     })?;
 
     for t in task_iter {
-        println!("Found task {:#?}", t.unwrap());
+        println!("Found {:#?}", t.unwrap());
     }
     Ok(())
 }
