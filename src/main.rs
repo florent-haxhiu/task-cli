@@ -1,15 +1,18 @@
 // Task CLI
 use clap::Parser;
 use rusqlite::{Connection, Result};
+use rusqlite::Result;
+use table::table::connect_to_db;
 
 use crate::commands::task::Task;
 use crate::table::table::create_table;
 
 mod commands;
+mod lib;
 mod table;
 
 fn main() -> Result<()> {
-    let conn = Connection::open_in_memory()?;
+    let conn = connect_to_db().unwrap();
 
     let _ = create_table(&conn);
 
@@ -17,11 +20,11 @@ fn main() -> Result<()> {
     println!("{:#?}", args);
 
     conn.execute(
-        "INSERT INTO task (id, name, done) VALUES (?1, ?2, ?3)",
+        "INSERT INTO tasks (id, name, done) VALUES (?1, ?2, ?3)",
         (&args.id, &args.name, &args.done),
     )?;
 
-    let mut stmt = conn.prepare("SELECT id, name, done FROM task")?;
+    let mut stmt = conn.prepare("SELECT id, name, done FROM tasks")?;
 
     let task_iter = stmt.query_map([], |row| {
         Ok(Task {
