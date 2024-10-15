@@ -1,22 +1,12 @@
 // Task CLI
+use clap::Parser;
 use rusqlite::{Connection, Result};
 
-use clap::Parser;
-
+use crate::commands::task::Task;
 use crate::table::table::create_table;
 
+mod commands;
 mod table;
-
-#[derive(Parser, Debug, Clone)]
-#[command(version, about, long_about = None)]
-struct Task {
-    #[arg(short, long, default_value_t = 1)]
-    id: i32,
-    #[arg(short, long)]
-    name: String,
-    #[arg(short, long, default_value_t = false)]
-    done: bool,
-}
 
 fn main() -> Result<()> {
     let conn = Connection::open_in_memory()?;
