@@ -37,7 +37,7 @@ cargo build
 Then the cli tool should be in the `target` folder
 
 ```bash
-./target/task-cli --help
+./target/debug/task-cli --help
 ```
 
 
