@@ -21,3 +21,11 @@ pub fn create_table(conn: &Connection) -> Result<(), Box<dyn std::error::Error>>
     Ok(())
 }
 
+pub fn drop_table(conn: &Connection) -> Result<(), Box<dyn std::error::Error>> {
+    conn.execute(
+        "DROP TABLE tasks",
+        ()
+    );
+
+    Ok(())
+}
