@@ -1,6 +1,5 @@
 // Task CLI
 use clap::Parser;
-use rusqlite::{Connection, Result};
 use rusqlite::Result;
 use table::table::connect_to_db;
 
