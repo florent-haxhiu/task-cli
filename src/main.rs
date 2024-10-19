@@ -29,6 +29,17 @@ fn main() -> Result<()> {
             };
             let _ = add_task(&conn, &task);
         }
+        Some(("remove", sub_matches)) => {
+            println!("{:#?}", sub_matches);
+            match sub_matches.subcommand() {
+                Some(("id", id_matches)) => {
+                    let id = id_matches.get_one::<String>("ID").unwrap();
+                    println!("{:#?}", id)
+                }
+                _ => {
+                    eprintln!("No id was provided")
+                }
+            }
         }
     }
     Ok(())
