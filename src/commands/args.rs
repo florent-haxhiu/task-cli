@@ -1,11 +1,6 @@
 use clap::{arg, Command};
-use rusqlite::Connection;
 
-use crate::table::table::drop_table;
-
-pub fn cli(conn: &Connection) -> Command {
-    let _what = drop_table(&conn);
-
+pub fn cli() -> Command {
     Command::new("task")
         .about("A task cli to keep track of shit to do")
         .subcommand_required(true)
