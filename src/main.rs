@@ -3,6 +3,7 @@ use commands::{args::cli, task::Task};
 use rusqlite::Result;
 use table::queries::{
     add_task, connect_to_db, create_table, delete_specific_task, remove_all_inside_table,
+    show_all_tasks,
 };
 use task_cli::get_free_id;
 
@@ -35,6 +36,11 @@ fn main() -> Result<()> {
                 println!("Removed all tasks")
             }
         },
+        Some(("show", _sub_matches)) => {
+            let _ = show_all_tasks(&conn);
+        }
+        _ => {
+            eprintln!("What the freak")
         }
     }
     Ok(())
