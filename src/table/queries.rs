@@ -57,36 +57,30 @@ pub fn add_task(conn: &Connection, args: &Task) -> Result<(), Box<dyn std::error
     Ok(())
 }
 
-// pub fn show_all_tasks(conn: &Connection) -> () {
-//     let mut stmt = conn.prepare("SELECT id, name, done FROM tasks").unwrap();
+pub fn show_all_tasks(conn: &Connection) -> Result<Vec<Task>, Box<dyn std::error::Error>> {
+    let mut stmt = conn.prepare("SELECT id, name, done FROM tasks")?;
 
-//     let task_iter = stmt
-//         .query_map([], |row| {
-//             Ok(Task {
-//                 id: row.get(0)?,
-//                 name: row.get(1)?,
-//                 done: row.get(2)?,
-//             })
-//         })
-//         .unwrap();
-//     task_iter
-// }
+    let task_iter = stmt.query_map([], |row| {
+        Ok(Task {
+            id: row.get(0)?,
+            name: row.get(1)?,
+            done: row.get(2)?,
+        })
+    })?;
 
-//pub fn get_task_from_db(conn: &Connection, id: &i32) -> Result<()> {
-//    let tasks = conn.execute(
-//        "SELECT
-//            id, name, done
-//        FROM tasks
-//            WHERE id=(?1)
-//        ",
-//        &id,
-//    )?;
-//
-//    let task = None;
-//
-//    match tasks {
-//        Ok(tasks) => task = tasks.unwrap(),
-//    }
-//
-//    Ok(())
-//}
+    let mut data: Vec<Task> = Vec::new();
+
+    for task in task_iter {
+        match task {
+            Ok(task) => {
+                println!("{task}");
+                data.push(task);
+            }
+            _ => {
+                eprintln!("What to show?");
+            }
+        }
+    }
+
+    Ok(data)
+}
