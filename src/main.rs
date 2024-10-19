@@ -19,8 +19,6 @@ fn main() -> Result<()> {
 
     match matches.subcommand() {
         Some(("add", sub_matches)) => {
-            println!("Adding task");
-            println!("{:#?}", sub_matches);
             let name = sub_matches.get_one::<String>("NAME").expect("required");
             let task = Task {
                 id: get_free_id(&conn)?,
@@ -30,7 +28,6 @@ fn main() -> Result<()> {
             let _ = add_task(&conn, &task);
         }
         Some(("remove", sub_matches)) => {
-            println!("{:#?}", sub_matches);
             match sub_matches.subcommand() {
                 Some(("id", id_matches)) => {
                     let id = id_matches.get_one::<String>("ID").unwrap();
