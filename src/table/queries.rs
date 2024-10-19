@@ -28,13 +28,16 @@ pub fn remove_all_inside_table(conn: &Connection) -> Result<(), Box<dyn std::err
     Ok(())
 }
 
-// pub fn delete_specific_task(
-//     conn: &Connection,
-//     id: &String,
-// ) -> Result<(), Box<dyn std::error::Error>> {
-//     conn.execute("DELETE FROM tasks WHERE id=(?1)", id)?;
-//     Ok(())
-// }
+pub fn delete_specific_task(
+    conn: &Connection,
+    id: &String,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut stmt = conn.prepare("DELETE FROM tasks WHERE id=(?1)")?;
+
+    stmt.execute([id])?;
+
+    Ok(())
+}
 
 pub fn add_task(conn: &Connection, args: &Task) -> Result<(), Box<dyn std::error::Error>> {
     let add = conn.execute(
