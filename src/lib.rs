@@ -26,7 +26,5 @@ pub fn get_free_id(conn: &Connection) -> Result<i32, Error> {
         }
     }
 
-    println!("{:?}", free_id);
-
     return Ok(free_id);
 }
