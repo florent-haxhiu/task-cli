@@ -44,7 +44,7 @@ Then the cli tool should be in the `target` folder
 ## Functionality
 - Task
     - [x] Get
-    - [ ] Remove
+    - [x] Remove
     - [ ] Update
     - [ ] Complete
 - Data Storage
