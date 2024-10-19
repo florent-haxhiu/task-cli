@@ -20,7 +20,7 @@ pub fn get_free_id(conn: &Connection) -> Result<i32, Error> {
                 }
             }
             _ => {
-                eprintln!("id not here")
+                eprintln!("No ID found")
             }
         }
     }
