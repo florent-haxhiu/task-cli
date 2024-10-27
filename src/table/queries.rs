@@ -84,3 +84,16 @@ pub fn show_all_tasks(conn: &Connection) -> Result<Vec<Task>, Box<dyn std::error
 
     Ok(data)
 }
+
+pub fn get_task_from_db(
+    conn: &Connection,
+    id: &String,
+) -> Result<Task, Box<dyn std::error::Error>> {
+    let tasks: Vec<Task> = show_all_tasks(conn).unwrap();
+
+    let new_id = id.parse::<i32>().unwrap();
+
+    let get_task_by_id: Vec<Task> = tasks.into_iter().filter(|t| t.id == new_id).collect();
+
+    Ok(get_task_by_id.first().cloned().unwrap())
+}

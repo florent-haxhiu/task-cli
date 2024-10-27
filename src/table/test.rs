@@ -5,6 +5,22 @@ use crate::commands::task::Task;
 use super::queries::*;
 
 #[test]
+fn test_get_specific_task_from_db() -> Result<(), Box<dyn std::error::Error>> {
+    let conn = Connection::open_in_memory()?;
+    let _ = create_table(&conn);
+    let task = Task {
+        id: 10,
+        name: "what".to_string(),
+        done: false,
+    };
+    let _ = add_task(&conn, &task);
+
+    let _task = get_task_from_db(&conn, &10.to_string());
+
+    Ok(())
+}
+
+#[test]
 fn test_retuns_all_tasks_in_db() -> Result<(), Box<dyn std::error::Error>> {
     let conn = Connection::open_in_memory()?;
     let _ = create_table(&conn);

@@ -2,8 +2,8 @@
 use commands::{args::cli, task::Task};
 use rusqlite::Result;
 use table::queries::{
-    add_task, connect_to_db, create_table, delete_specific_task, remove_all_inside_table,
-    show_all_tasks,
+    add_task, connect_to_db, create_table, delete_specific_task, get_task_from_db,
+    remove_all_inside_table, show_all_tasks,
 };
 use task_cli::get_free_id;
 
@@ -36,12 +36,23 @@ fn main() -> Result<()> {
                 println!("Removed all tasks")
             }
         },
-        Some(("show", _sub_matches)) => {
-            let _ = show_all_tasks(&conn);
+        Some(("complete", sub_matches)) => {
+            println!("Completed task");
+            println!("{:#?}", sub_matches);
         }
+        Some(("show", _sub_matches)) => match _sub_matches.subcommand() {
+            Some(("id", id_matches)) => {
+                let id = id_matches.get_one::<String>("ID").unwrap();
+                let _ = get_task_from_db(&conn, id);
+            }
+            _ => {
+                let _ = show_all_tasks(&conn);
+            }
+        },
         _ => {
             eprintln!("What the freak")
         }
     }
+
     Ok(())
 }
