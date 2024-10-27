@@ -85,10 +85,7 @@ pub fn show_all_tasks(conn: &Connection) -> Result<Vec<Task>, Box<dyn std::error
     Ok(data)
 }
 
-pub fn get_task_from_db(
-    conn: &Connection,
-    id: &String,
-) -> Result<Task, Box<dyn std::error::Error>> {
+pub fn get_task_from_db(conn: &Connection, id: &str) -> Result<Task, Box<dyn std::error::Error>> {
     let tasks: Vec<Task> = show_all_tasks(conn).unwrap();
 
     let new_id = id.parse::<i32>().unwrap();

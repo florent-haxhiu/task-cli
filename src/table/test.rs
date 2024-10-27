@@ -13,9 +13,17 @@ fn test_get_specific_task_from_db() -> Result<(), Box<dyn std::error::Error>> {
         name: "what".to_string(),
         done: false,
     };
+    let task_two = Task {
+        id: 9,
+        name: "huh".to_string(),
+        done: false,
+    };
     let _ = add_task(&conn, &task);
+    let _ = add_task(&conn, &task_two);
 
-    let _task = get_task_from_db(&conn, &10.to_string());
+    let actual_task = get_task_from_db(&conn, &10.to_string())?;
+
+    assert_eq!(task, actual_task);
 
     Ok(())
 }
