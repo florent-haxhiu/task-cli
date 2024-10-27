@@ -33,9 +33,9 @@ pub fn cli() -> Command {
                 .about("Show tasks")
                 .short_flag('s')
                 .subcommand(
-                    Command::new("select")
+                    Command::new("id")
                         .about("Get specific task")
-                        .short_flag('s')
+                        .short_flag('i')
                         .arg(arg!(<ID> "the id of task")),
                 ),
         )
