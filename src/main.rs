@@ -36,10 +36,12 @@ fn main() -> Result<()> {
                 println!("Removed all tasks")
             }
         },
-        Some(("complete", sub_matches)) => {
-            println!("Completed task");
-            println!("{:#?}", sub_matches);
-        }
+        Some(("complete", sub_matches)) => match sub_matches.subcommand() {
+            _ => {
+                let id = sub_matches.get_one::<String>("ID").unwrap();
+                let _ = complete_specific_task(&conn, id);
+            }
+        },
         Some(("show", _sub_matches)) => match _sub_matches.subcommand() {
             Some(("id", id_matches)) => {
                 let id = id_matches.get_one::<String>("ID").unwrap();
