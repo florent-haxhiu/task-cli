@@ -48,7 +48,11 @@ pub fn complete_specific_task(conn: &Connection, id: &str) -> bool {
     return true;
 }
 
-pub fn add_task(conn: &Connection, args: &Task) -> Result<(), Box<dyn std::error::Error>> {
+pub fn add_task(
+    conn: &Connection,
+    args: &Task,
+    update: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
     let add = conn.execute(
         "INSERT INTO tasks (id, name, done) VALUES (?1, ?2, ?3)",
         (&args.id, &args.name, &args.done),
@@ -56,7 +60,11 @@ pub fn add_task(conn: &Connection, args: &Task) -> Result<(), Box<dyn std::error
 
     match add {
         Ok(_add) => {
-            println!("Task added")
+            if update == true {
+                println!("Task completed")
+            } else {
+                println!("Task added")
+            }
         }
         Err(err) => {
             eprintln!("Error {err}")
