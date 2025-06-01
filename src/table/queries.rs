@@ -40,10 +40,6 @@ pub fn delete_specific_task(
 }
 
 pub fn complete_specific_task(conn: &Connection, id: &str) -> bool {
-    /* Completes/
-     *
-     *
-     */
     let mut task: Task = get_task_from_db(conn, id).unwrap();
     task.done = if task.done == true { true } else { false };
     println!("{:?}", task);
