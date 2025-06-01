@@ -24,7 +24,7 @@ fn main() -> Result<()> {
                 name: name.to_string(),
                 done: false,
             };
-            let _ = add_task(&conn, &task);
+            let _ = add_task(&conn, &task, false);
         }
         Some(("remove", sub_matches)) => match sub_matches.subcommand() {
             Some(("id", id_matches)) => {
