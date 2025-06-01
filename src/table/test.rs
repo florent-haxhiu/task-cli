@@ -1,8 +1,5 @@
-use rusqlite::Connection;
 
-use crate::commands::task::Task;
 
-use super::queries::*;
 
 #[test]
 fn test_get_specific_task_from_db() -> Result<(), Box<dyn std::error::Error>> {
