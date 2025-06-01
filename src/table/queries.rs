@@ -39,6 +39,19 @@ pub fn delete_specific_task(
     Ok(())
 }
 
+pub fn complete_specific_task(conn: &Connection, id: &str) -> bool {
+    /* Completes/
+     *
+     *
+     */
+    let mut task: Task = get_task_from_db(conn, id).unwrap();
+    task.done = if task.done == true { true } else { false };
+    println!("{:?}", task);
+    let _ = add_task(conn, &task);
+
+    return true;
+}
+
 pub fn add_task(conn: &Connection, args: &Task) -> Result<(), Box<dyn std::error::Error>> {
     let add = conn.execute(
         "INSERT INTO tasks (id, name, done) VALUES (?1, ?2, ?3)",
