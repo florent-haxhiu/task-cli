@@ -58,8 +58,8 @@ pub fn add_task(conn: &Connection, args: &Task) -> Result<(), Box<dyn std::error
         Ok(_add) => {
             println!("Task added")
         }
-        _ => {
-            eprintln!("Error")
+        Err(err) => {
+            eprintln!("Error {err}")
         }
     }
 
