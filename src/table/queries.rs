@@ -41,8 +41,8 @@ pub fn delete_specific_task(
 
 pub fn complete_specific_task(conn: &Connection, id: &str) -> bool {
     let mut task: Task = get_task_from_db(conn, id).unwrap();
-    task.done = if task.done == true { true } else { false };
-    println!("{:?}", task);
+    task.done = if task.done == false { true } else { false };
+    let _ = delete_specific_task(conn, &String::from(id));
     let _ = add_task(conn, &task);
 
     return true;
