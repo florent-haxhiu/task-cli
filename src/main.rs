@@ -2,8 +2,8 @@
 use commands::{args::cli, task::Task};
 use rusqlite::Result;
 use table::queries::{
-    add_task, connect_to_db, create_table, delete_specific_task, get_task_from_db,
-    remove_all_inside_table, show_all_tasks,
+    add_task, complete_specific_task, connect_to_db, create_table, delete_specific_task,
+    get_task_from_db, remove_all_inside_table, show_all_tasks,
 };
 use task_cli::get_free_id;
 
