@@ -9,6 +9,6 @@ pub struct Task {
 
 impl Display for Task {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}: {:.3}: {}", self.id, self.name, self.done)
+        write!(f, "{}: {}: {}", self.id, self.name, self.done)
     }
 }
